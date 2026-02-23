@@ -13,6 +13,7 @@ import { SiFlutter, SiDart, SiFastapi } from 'react-icons/si';
 import React from 'react'
 import { Link } from 'react-router-dom';
 import avatar from "/src/assets/avatar2.jpg"
+// import avatar from "/src/assets/portfolio-edited.png"
 const About = () => {
     const skills = [
   { name: "Flutter", icon: <SiFlutter className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
@@ -29,11 +30,11 @@ const About = () => {
   { name: "Git", icon: <FaGit className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> } 
 ];
   return (
-    <div className='w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col'>
+    <div className='w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col font-outfit'>
         {/* About Section */}
         <div className='flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12 xl:gap-20 mt-8 sm:mt-10 w-full'>
             {/* Profile Image */}
-            <div className='flex justify-center lg:justify-start'>
+            <div className='flex justify-center items-center lg:justify-start'>
                 <img 
                     src={avatar}
                     alt='Profile Image'
@@ -49,7 +50,7 @@ const About = () => {
                 <p className='text-white text-sm sm:text-base lg:text-lg leading-relaxed'>
                     Hi! I am Ajijolaoluwa Adesoji, a fullstack developer passionate about building efficient, scalable applications. With deep experience in mobile development with Flutter, dynamic frontends with React, and robust backend systems with FastAPI, I thrive on creating seamless user experiences from concept to deployment.
                 </p>
-                <Link to="/pro">
+                <Link to="/contact">
                     <button className='w-32 sm:w-36 h-10 sm:h-12 text-white bg-green-500 rounded-xl font-bold mt-6 sm:mt-8 lg:mt-10 hover:bg-green-600 transition-colors text-sm sm:text-base'>
                         Contact Me
                     </button>
@@ -59,7 +60,7 @@ const About = () => {
         
         {/* Skills Section */}
         <div className='flex flex-col justify-center items-center mt-12 sm:mt-16 lg:mt-20'>
-            <h2 className='text-white font-bold text-xl sm:text-2xl lg:text-3xl mb-6 sm:mb-8'>
+            <h2 className='text-white font-bold text-xl sm:text-2xl lg:text-3xl mb-6 sm:mb-8 font-outfit'>
                 My Tech Stack
             </h2>
 

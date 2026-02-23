@@ -6,17 +6,17 @@ const Techstack = () => {
   {
     category: "Frontend",
     icon: "💻",
-    technologies: ["React", "HTML", "CSS", "JavaScript", "TypeScript", "Tailwind CSS"]
+    technologies: ["React", "HTML", "CSS", "JavaScript", "Tailwind CSS"]
   },
   {
     category: "Backend",
     icon: "⚙️", 
-    technologies: ["FastAPI", "PHP", "MySQL", "Node.js", "Python", "MongoDB"]
+    technologies: ["FastAPI", "Python", "MySQL", "PHP", "Firebase", "Supabase"]
   },
   {
     category: "Mobile",
     icon: "📱",
-    technologies: ["Flutter", "Dart", "React Native"]
+    technologies: ["Flutter", "Dart", "Flutterflow"]
   }
 ];
 
@@ -24,7 +24,7 @@ const Techstack = () => {
   return (
     <div className='flex flex-col items-center my-20'>
       <h1 className='text-white font-bold text-4xl line-2 mt-12'>My Tech Stack</h1>
-      <p className='text-gray-400 my-6'>A showcase of the tools and technologies I use to build modern, efficient and scalable applications.</p>
+      <p className='text-gray-400 text-center my-6 px-3'>A showcase of the tools and technologies I use to build modern, efficient and scalable applications.</p>
 
       <div className='flex flex-wrap justify-center items-stretch gap-6 px-4 my-20'>
   {skillsData.map((skillCategory) => (

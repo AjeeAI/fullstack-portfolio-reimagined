@@ -20,7 +20,7 @@ const App = () => {
   }, [pathname])
 
   return (
-    <div className='flex flex-col w-full min-h-screen justify-center items-center bg-gradient-custom'>
+    <div className='flex flex-col w-full min-h-screen justify-center items-center bg-gradient-custom font-inter'>
       <Header/>
 
       {/* Give each section an id matching the route */}

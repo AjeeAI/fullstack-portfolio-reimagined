@@ -6,25 +6,34 @@
 }
  */
 
-
- @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Pacifico&display=swap');
+@import "tailwindcss";
+ 
 
 @theme {
   --color-custombg: #0E0B17;
   --color-custompurple: #2D1B69;
   --color-customdark: #1A1033;
+  
+  --font-outfit: "Outfit", sans-serif;
+  --font-pacifico: "Pacifico", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
-@layer utilities {
-  .bg-gradient-custom {
-    background: linear-gradient(135deg, var(--color-custombg) 0%, var(--color-custompurple) 100%);
-  }
-  
-  .bg-gradient-custom-vertical {
-    background: linear-gradient(180deg, var(--color-custombg) 0%, var(--color-customdark) 100%);
-  }
-  
-  .bg-gradient-custom-diagonal {
-    background: linear-gradient(45deg, var(--color-custombg) 0%, var(--color-custompurple) 50%, var(--color-customdark) 100%);
-  }
+.active {
+  @apply bg-purple-600 text-white text-sm lg:text-base hover:text-orange-300 transition-colors w-20 h-7 flex justify-center items-center text-center rounded-lg;
+}
+.m-active{
+  @apply bg-purple-600 text-white text-sm lg:text-base hover:text-orange-300 transition-colors w-full h-10 flex justify-center items-center text-center rounded-lg;
+}
+.bg-gradient-custom {
+  background: linear-gradient(135deg, var(--color-custombg) 0%, var(--color-custompurple) 100%);
+}
+
+.bg-gradient-custom-vertical {
+  background: linear-gradient(180deg, var(--color-custombg) 0%, var(--color-customdark) 100%);
+}
+
+.bg-gradient-custom-diagonal {
+  background: linear-gradient(45deg, var(--color-custombg) 0%, var(--color-custompurple) 50%, var(--color-customdark) 100%);
 }

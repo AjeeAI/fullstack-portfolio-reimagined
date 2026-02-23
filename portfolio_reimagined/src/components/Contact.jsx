@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaEnvelope, FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6'
 import MessageForm from './MessageForm'
 
 const Contact = () => {
+    const [copied, setCopied] = useState(false);
+    const email = "ajeeaidev@gmail.com";
+    const handleCopy = async() => {
+       try {
+         await navigator.clipboard.writeText(email);
+        setCopied(true);
+        setTimeout(()=> {setCopied(false)}, 2000);
+       
+       } catch (error) {
+         {error}
+       
+       }
+        }
+
   return (
-    <div className='flex flex-col items-center my-20  gap-5 w-full px-4 sm:px-6 lg:px-8'>
-        <h1 className='text-white font-bold text-3xl sm:text-4xl text-center'>Get in Touch</h1>
+    <div className='flex flex-col items-center my-20  gap-5 w-full px-4 sm:px-6 lg:px-8' id='contact'>
+        <h1 className='text-white font-bold text-3xl sm:text-4xl text-center font-outfit'>Get in Touch</h1>
         <p className='text-white text-sm sm:text-md max-w-2xl text-center mb-8 sm:mb-10'>
             Feel free to reach out for collaborations, job opportunities or just to say hi. 
             I am always open to discussing new projects and innovative ideas.
@@ -19,12 +33,15 @@ const Contact = () => {
                         <FaEnvelope size={24} className="sm:w-[30px] sm:h-[30px]" color='white'/>
                         <p className='text-white text-sm sm:text-base'>ajeeaidev@gmail.com</p>
                     </div>
-                    <button className='text-purple-300 hover:text-white px-3 py-1 rounded border border-purple-300 hover:bg-purple-300 hover:bg-opacity-20 transition-colors text-sm sm:text-base'>
-                        Copy
+                    <button className='text-purple-300 hover:text-white px-3 py-1 rounded border border-purple-300 hover:bg-purple-300 hover:bg-opacity-20 transition-colors text-sm sm:text-base' onClick={handleCopy}>
+                       Copy
                     </button>
+                    
                 </div>
+                {copied && <div>Email copied to clipboard</div>}
 
-                <p className='text-purple-300 text-center lg:text-left'>Find me on social media</p>
+                <div className='flex flex-col gap-10 items-center h-50 w-full'>
+                    <p className='text-purple-300 text-center lg:text-left'>Find me on social media</p>
 
                 <div className='flex justify-center gap-6 sm:gap-8 lg:gap-10 w-full'>
                     <div>
@@ -53,6 +70,7 @@ const Contact = () => {
                             </div>
                         </a>
                     </div>
+                </div>
                 </div>
             </div>
 
