@@ -1,3 +1,5 @@
+'use client'; // Required for useState and browser APIs like navigator.clipboard
+
 import React, { useState } from 'react'
 import { FaEnvelope, FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6'
 import MessageForm from './MessageForm'
@@ -5,17 +7,16 @@ import MessageForm from './MessageForm'
 const Contact = () => {
     const [copied, setCopied] = useState(false);
     const email = "ajeeaidev@gmail.com";
+    
     const handleCopy = async() => {
        try {
          await navigator.clipboard.writeText(email);
-        setCopied(true);
-        setTimeout(()=> {setCopied(false)}, 2000);
-       
+         setCopied(true);
+         setTimeout(()=> {setCopied(false)}, 2000);
        } catch (error) {
-         {error}
-       
+         console.error("Failed to copy:", error);
        }
-        }
+    }
 
   return (
     <div className='flex flex-col items-center my-20  gap-5 w-full px-4 sm:px-6 lg:px-8' id='contact'>
@@ -33,14 +34,17 @@ const Contact = () => {
                         <FaEnvelope size={24} className="sm:w-[30px] sm:h-[30px]" color='white'/>
                         <p className='text-white text-sm sm:text-base'>ajeeaidev@gmail.com</p>
                     </div>
-                    <button className='text-purple-300 hover:text-white px-3 py-1 rounded border border-purple-300 hover:bg-purple-300 hover:bg-opacity-20 transition-colors text-sm sm:text-base' onClick={handleCopy}>
-                       Copy
+                    <button 
+                        className='text-purple-300 hover:text-white px-3 py-1 rounded border border-purple-300 hover:bg-purple-300 hover:bg-opacity-20 transition-colors text-sm sm:text-base' 
+                        onClick={handleCopy}
+                    >
+                        Copy
                     </button>
                     
                 </div>
-                {copied && <div>Email copied to clipboard</div>}
+                {copied && <div className="text-green-400 text-sm">Email copied to clipboard!</div>}
 
-                <div className='flex flex-col gap-10 items-center h-50 w-full'>
+                <div className='flex flex-col gap-10 items-center h-50 w-full mt-4'>
                     <p className='text-purple-300 text-center lg:text-left'>Find me on social media</p>
 
                 <div className='flex justify-center gap-6 sm:gap-8 lg:gap-10 w-full'>
