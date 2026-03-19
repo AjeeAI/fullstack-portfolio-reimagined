@@ -73,7 +73,17 @@ def ingest_github(username: str):
 
     repos = response.json()
     documents = []
-    print(f"Found {len(repos)} repositories. Extracting READMEs...")
+    print(f"Found {len(repos)} total repositories. Filtering out generic READMEs...")
+
+    # Define phrases that indicate a README is just an unedited default framework template
+    boilerplate_phrases = [
+        "First, run the development server",
+        "Getting Started with Create React App",
+        "This project was bootstrapped with",
+        "# React + Vite",
+        "Currently, two official plugins are available",
+        "A new Flutter project."
+    ]
 
     for repo in repos:
         repo_name = repo['name']
@@ -84,10 +94,32 @@ def ingest_github(username: str):
         readme_res = requests.get(readme_url, headers=headers)
         
         readme_content = ""
+        is_generic = False
+
         if readme_res.status_code == 200:
             readme_data = readme_res.json()
-            readme_content = base64.b64decode(readme_data['content']).decode('utf-8')
-        
+            raw_readme = base64.b64decode(readme_data['content']).decode('utf-8')
+            
+            # Check if any boilerplate phrase exists in the raw README
+            if any(phrase in raw_readme for phrase in boilerplate_phrases):
+                is_generic = True
+            elif len(raw_readme.strip()) < 20: 
+                # Also flag it if the README is practically empty
+                is_generic = True
+            else:
+                readme_content = raw_readme
+
+        # --- THE FILTERING LOGIC ---
+        if is_generic or not readme_content:
+            # If there is no custom description AND no custom readme, skip the repo entirely
+            if description == "No description provided.":
+                print(f"⏭️  Skipping '{repo_name}' (Generic/Empty README & No Description)")
+                continue
+            else:
+                # If there's a good description but a bad readme, keep the description but drop the readme text
+                readme_content = "Standard framework boilerplate (Omitted for AI context)."
+
+        # If it passes the filter, add it to our documents
         full_text = f"Repository: {repo_name}\nLanguage: {language}\nDescription: {description}\n\nREADME:\n{readme_content}"
         
         doc = Document(
@@ -96,8 +128,12 @@ def ingest_github(username: str):
         )
         documents.append(doc)
 
+    if not documents:
+        print("❌ No high-quality repositories found to ingest.")
+        return
+
     chunks = text_splitter.split_documents(documents)
-    print(f"Uploading {len(chunks)} GitHub chunks to Supabase...")
+    print(f"Uploading {len(chunks)} high-quality GitHub chunks to Supabase...")
     
     SupabaseVectorStore.from_documents(
         chunks, embeddings, client=supabase,
@@ -136,7 +172,7 @@ if __name__ == "__main__":
     ingest_cv("CV.pdf")
     
     # 2. Ingest GitHub
-    ingest_github("AjeeAI")
+    # ingest_github("AjeeAI")
     
     # 3. Ingest LinkedIn
     ingest_linkedin("linkedin_profile.pdf")

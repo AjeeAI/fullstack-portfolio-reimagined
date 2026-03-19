@@ -6,10 +6,14 @@ import Projects from '@/components/Projects'
 import Techstack from '@/components/Techstack'
 import Journey from '@/components/Journey'
 import Contact from '@/components/Contact'
-import Footer from '@/components/Footer' // ADDED: The final seal
+import Footer from '@/components/Footer'
 
 // 1. Import the tracker and scroll button component
 import NavigationHelper from '@/components/NavigationHelper'
+
+// NEW: Import the Chatbot component!
+import Chatbot from '@/components/Chatbot' 
+
 export const revalidate = 0;
 
 export default function Home() {
@@ -40,6 +44,9 @@ export default function Home() {
 
       {/* THE ENDING */}
       <Footer />
+
+      {/* NEW: The AI Chatbot floating above everything else */}
+      <Chatbot />
     </div>
   )
 }
