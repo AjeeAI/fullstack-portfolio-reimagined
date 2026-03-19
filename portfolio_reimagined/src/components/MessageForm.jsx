@@ -1,144 +1,138 @@
-'use client'; // Required for form state
+'use client'; 
 
 import React, { useState } from 'react'
-import { db } from '@/lib/firebase'; // Ensure this points to your firebase config
+import { db } from '@/lib/firebase'; 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { fadeIn, staggerContainer } from '@/utils/variants';
+import { FaCheckCircle, FaPaperPlane } from 'react-icons/fa';
 
 const MessageForm = () => {
     const [loading, setLoading] = useState(false);
+    const [sent, setSent] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         subject: "",
         message: ""
-    })
+    });
 
     const handleChange = (e) => {
-        const {name, value} = e.target
-        setFormData({ ...formData, [name]: value })
-    }
+        const {name, value} = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        
+        e.preventDefault();
         try {
             setLoading(true);
-            
-            // Add directly to Firebase Firestore
             await addDoc(collection(db, "messages"), {
-                name: formData.name,
-                email: formData.email,
-                subject: formData.subject,
-                message: formData.message,
-                createdAt: serverTimestamp() // Tracks when it was sent
+                ...formData,
+                createdAt: serverTimestamp()
             });
             
-            alert('Thank you for your message! I\'ll get back to you soon.')
-            setFormData({ name: '', email: '', subject: '', message: '' })
+            setSent(true);
+            setFormData({ name: '', email: '', subject: '', message: '' });
+            // We no longer auto-reset, let the user enjoy the success state!
             
         } catch (error) {
             console.error("Error saving message:", error);
-            alert('There was an error sending your message. Please try again.')
+            alert('There was an error sending your message. Please try again.');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
+    const inputStyle = "w-full bg-white/[0.03] text-white rounded-xl px-4 border border-white/10 focus:border-purple-500/50 focus:bg-white/[0.07] focus:outline-none transition-all duration-300 placeholder:text-slate-600 text-sm sm:text-base";
 
     return (
-        <div className='w-full max-w-md lg:max-w-full'>
-            <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:gap-6 w-full'>
-                <div className='flex flex-col sm:flex-row gap-4 sm:gap-6'>
-                    <div className='flex flex-col w-full'>
-                        <label className='text-gray-100 mb-2 text-sm sm:text-base'>Name</label>
-                        <input 
-                            name='name'
-                            value={formData.name}
-                            placeholder='Your Name'
-                            onChange={handleChange}
-                            type='text'
-                            className='w-full h-12 bg-gray-700 text-white rounded-lg px-4 border border-gray-600 focus:border-purple-500 focus:outline-none text-sm sm:text-base'
-                            required
-                        />
-                    </div>
-                    <div className='flex flex-col w-full'>
-                        <label className='text-gray-100 mb-2 text-sm sm:text-base'>Email</label>
-                        <input 
-                            name='email'
-                            value={formData.email}
-                            placeholder='your.email@example.com'
-                            onChange={handleChange}
-                            type='email'
-                            className='w-full h-12 bg-gray-700 text-white rounded-lg px-4 border border-gray-600 focus:border-purple-500 focus:outline-none text-sm sm:text-base'
-                            required
-                        />
-                    </div>
-                </div>
-                
-                <div className='flex flex-col'>
-                    <label className='text-gray-100 mb-2 text-sm sm:text-base'>Subject</label>
-                    <input 
-                        name='subject'
-                        value={formData.subject}
-                        placeholder='Subject of your message'
-                        onChange={handleChange}
-                        type='text'
-                        className='w-full h-12 bg-gray-700 text-white rounded-lg px-4 border border-gray-600 focus:border-purple-500 focus:outline-none text-sm sm:text-base'
-                        required
-                    />
-                </div>
+        <div className='w-full min-h-[450px] flex items-center justify-center relative'>
+            <AnimatePresence mode="wait">
+                {!sent ? (
+                    // 1. THE FORM (Entry & Exit)
+                    <motion.form 
+                        key="contact-form"
+                        variants={staggerContainer(0.1, 0)}
+                        initial="hidden"
+                        animate="show"
+                        exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                        onSubmit={handleSubmit} 
+                        className='flex flex-col gap-6 w-full'
+                    >
+                        <div className='flex flex-col sm:flex-row gap-6'>
+                            <motion.div variants={fadeIn("up")} className='flex flex-col w-full'>
+                                <label className='text-slate-400 mb-2 text-xs uppercase tracking-widest font-bold ml-1'>Name</label>
+                                <input name='name' value={formData.name} placeholder='John Doe' onChange={handleChange} type='text' className={`${inputStyle} h-12`} required />
+                            </motion.div>
+                            <motion.div variants={fadeIn("up")} className='flex flex-col w-full'>
+                                <label className='text-slate-400 mb-2 text-xs uppercase tracking-widest font-bold ml-1'>Email</label>
+                                <input name='email' value={formData.email} placeholder='john@example.com' onChange={handleChange} type='email' className={`${inputStyle} h-12`} required />
+                            </motion.div>
+                        </div>
+                        
+                        <motion.div variants={fadeIn("up")} className='flex flex-col'>
+                            <label className='text-slate-400 mb-2 text-xs uppercase tracking-widest font-bold ml-1'>Subject</label>
+                            <input name='subject' value={formData.subject} placeholder='Project Inquiry' onChange={handleChange} type='text' className={`${inputStyle} h-12`} required />
+                        </motion.div>
 
-                <div className='flex flex-col'>
-                    <label className='text-gray-100 mb-2 text-sm sm:text-base'>Message</label>
-                    <textarea 
-                        name='message'
-                        value={formData.message}
-                        placeholder='Your message here...'
-                        onChange={handleChange}
-                        rows={4}
-                        className='w-full bg-gray-700 text-white rounded-lg px-4 py-3 border border-gray-600 focus:border-purple-500 focus:outline-none resize-none text-sm sm:text-base'
-                        required
-                    />
-                </div>
-                
-                <button 
-                    type='submit'
-                    className='w-full h-12 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-sm sm:text-base flex justify-center items-center disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400'
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <svg fill='white' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className='h-6 w-6'>
-                            <circle cx="4" cy="12" r="0">
-                                <animate begin="0;spinner_z0Or.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="0;3" fill="freeze"/>
-                                <animate begin="spinner_OLMs.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="4;12" fill="freeze"/>
-                                <animate begin="spinner_UHR2.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="12;20" fill="freeze"/>
-                                <animate id="spinner_lo66" begin="spinner_Aguh.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="3;0" fill="freeze"/>
-                                <animate id="spinner_z0Or" begin="spinner_lo66.end" attributeName="cx" dur="0.001s" values="20;4" fill="freeze"/>
-                            </circle>
-                            <circle cx="4" cy="12" r="3">
-                                <animate begin="0;spinner_z0Or.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="4;12" fill="freeze"/>
-                                <animate begin="spinner_OLMs.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="12;20" fill="freeze"/>
-                                <animate id="spinner_JsnR" begin="spinner_UHR2.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="3;0" fill="freeze"/>
-                                <animate id="spinner_Aguh" begin="spinner_JsnR.end" attributeName="cx" dur="0.001s" values="20;4" fill="freeze"/>
-                                <animate begin="spinner_Aguh.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="0;3" fill="freeze"/>
-                            </circle>
-                            <circle cx="12" cy="12" r="3">
-                                <animate begin="0;spinner_z0Or.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="12;20" fill="freeze"/>
-                                <animate id="spinner_hSjk" begin="spinner_OLMs.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="3;0" fill="freeze"/>
-                                <animate id="spinner_UHR2" begin="spinner_hSjk.end" attributeName="cx" dur="0.001s" values="20;4" fill="freeze"/>
-                                <animate begin="spinner_UHR2.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="0;3" fill="freeze"/>
-                                <animate begin="spinner_Aguh.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="4;12" fill="freeze"/>
-                            </circle>
-                            <circle cx="20" cy="12" r="3">
-                                <animate id="spinner_4v5M" begin="0;spinner_z0Or.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="3;0" fill="freeze"/>
-                                <animate id="spinner_OLMs" begin="spinner_4v5M.end" attributeName="cx" dur="0.001s" values="20;4" fill="freeze"/>
-                                <animate begin="spinner_OLMs.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="0;3" fill="freeze"/>
-                                <animate begin="spinner_UHR2.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="4;12" fill="freeze"/>
-                                <animate begin="spinner_Aguh.end" attributeName="cx" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="12;20" fill="freeze"/>
-                            </circle>
-                        </svg>
-                    ) : "Send message"}
-                </button>
-            </form>
+                        <motion.div variants={fadeIn("up")} className='flex flex-col'>
+                            <label className='text-slate-400 mb-2 text-xs uppercase tracking-widest font-bold ml-1'>Message</label>
+                            <textarea name='message' value={formData.message} placeholder='Tell me about your project...' onChange={handleChange} rows={5} className={`${inputStyle} py-3 resize-none`} required />
+                        </motion.div>
+                        
+                        <motion.button 
+                            variants={fadeIn("up")}
+                            whileHover={{ scale: 1.02, boxShadow: "0px 0px 20px rgba(168, 85, 247, 0.4)" }}
+                            whileTap={{ scale: 0.98 }}
+                            type='submit'
+                            disabled={loading}
+                            className='w-full h-14 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-bold flex justify-center items-center gap-3 border border-white/10 shadow-lg shadow-purple-500/20'
+                        >
+                            {loading ? (
+                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                                    <FaPaperPlane className="text-white" />
+                                </motion.div>
+                            ) : (
+                                <>
+                                    <span>Send Message</span>
+                                    <FaPaperPlane className="text-xs opacity-50" />
+                                </>
+                            )}
+                        </motion.button>
+                    </motion.form>
+                ) : (
+                    // 2. THE SUCCESS POP (Confirmation state)
+                    <motion.div 
+                        key="success-message"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                        className="flex flex-col items-center justify-center text-center p-6 sm:p-10"
+                    >
+                        <motion.div
+                            initial={{ scale: 0, rotate: -45 }}
+                            animate={{ scale: [0, 1.2, 1], rotate: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                            <FaCheckCircle className="text-green-400 text-7xl mb-6 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]" />
+                        </motion.div>
+                        
+                        <h2 className="text-white text-3xl font-bold font-outfit mb-3 italic tracking-tight">Transmission Received</h2>
+                        <p className="text-slate-400 font-light max-w-sm">
+                            Thank you! Your message has been encrypted and sent. I'll get back to you within <span className="text-purple-400 font-medium">24 hours</span>.
+                        </p>
+
+                        <motion.button
+                            onClick={() => setSent(false)}
+                            whileHover={{ scale: 1.05, color: "#A855F7" }}
+                            whileTap={{ scale: 0.95 }}
+                            className="mt-10 text-[10px] uppercase tracking-[0.4em] text-slate-500 font-bold transition-colors"
+                        >
+                            Send another message?
+                        </motion.button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

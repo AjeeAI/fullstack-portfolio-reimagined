@@ -1,12 +1,10 @@
-import '../index.css'; // This imports your global CSS and Tailwind
+import '../index.css'; 
+import ClientWrapper from '@/components/ClientWrapper';
 
-
-// src/app/layout.jsx
-
+// Metadata stays here (Server Side)
 export const metadata = {
-  title: 'Ajee | Fullstack Developer',
-  description: 'Building seamless web experiences',
-  // ADD THIS SECTION:
+  title: 'Ajee | Fullstack & AI Developer',
+  description: 'Building scalable, AI-powered web applications and seamless digital experiences.',
   icons: {
     icon: '/logo.svg', 
   },
@@ -14,15 +12,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      {/* The warning persists because an extension is modifying the BODY.
-          Apply the suppression here to ignore injected attributes like 'cz-shortcut-listen'
-      */}
+    <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
       <body 
-        className="bg-gray-900 text-white font-inter" 
+        className="bg-[#030014] bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-violet-600/15 via-[#030014] to-black text-white font-inter overflow-x-hidden w-full relative min-h-screen" 
         suppressHydrationWarning
       >
-        {children}
+        {/* The Grain Overlay */}
+        <div className="fixed inset-0 z-[-1] opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+        
+        {/* Use the Wrapper to manage the Preloader state */}
+        <ClientWrapper>
+            {children}
+        </ClientWrapper>
       </body>
     </html>
   );

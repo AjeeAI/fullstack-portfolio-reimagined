@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conergy Global - Web Development Proposal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; color: #1f2937; }
+        
+        /* This ensures the PDF looks perfect when you print/save it */
+        @media print {
+            body { padding: 0 !important; margin: 0 !important; background: white !important; }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            @page { margin: 20mm; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-10">
+
+    <div class="max-w-4xl mx-auto mb-6 no-print text-right">
+        <button onclick="window.print()" class="bg-[#E8832A] text-white px-6 py-2 rounded font-bold shadow hover:bg-orange-600 transition">
+            Export to PDF
+        </button>
+    </div>
+
+    <div class="max-w-4xl mx-auto bg-white p-12 shadow-xl rounded-lg">
+        
+        <header class="border-b-2 border-[#0A365C] pb-6 mb-8">
+            <h1 class="text-3xl font-bold text-[#0A365C] uppercase tracking-wide">Web Development Proposal</h1>
+            <p class="text-lg text-gray-500 mt-2">Conergy Global Investments Ltd - Digital Infrastructure & AI Integration</p>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">1. SCOPE OF WORK</h2>
+            <p class="text-sm leading-relaxed mb-6">
+                I will develop and deploy a professional, enterprise-grade website for Conergy Global. The website will be built using the modern Next.js framework to ensure maximum performance, and securely deployed on Vercel.
+            </p>
+
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">2. DELIVERABLES</h2>
+            
+            <h3 class="font-bold text-[#E8832A] mt-4">Website Development</h3>
+            <ul class="list-disc list-inside text-sm mt-2 space-y-1 ml-2">
+                <li><strong>Pages (5+ total):</strong> Home, Services, About Us, Projects/Track Record, and Contact.</li>
+                <li>Premium UI with scroll-triggered animations & Glassmorphism.</li>
+                <li>Fully responsive, fast loading, and SEO-optimized.</li>
+            </ul>
+
+            <h3 class="font-bold text-[#E8832A] mt-4">Quote & Consultation Booking System</h3>
+            <ul class="list-disc list-inside text-sm mt-2 space-y-1 ml-2">
+                <li>Request form capturing project scope and company details.</li>
+                <li>Email notification system routing to appropriate departments.</li>
+            </ul>
+
+            <h3 class="font-bold text-[#E8832A] mt-4">Conergy AI Assistant Chatbot (Add-on)</h3>
+            <ul class="list-disc list-inside text-sm mt-2 space-y-1 ml-2">
+                <li>Integrate an AI chatbot directly into the platform using existing LLMs.</li>
+                <li>Utilize orchestration frameworks and vector databases to retrieve answers based strictly on Conergy’s proprietary info, DPR compliance, and ISO standards.</li>
+                <li>Enable lead capture through chat with an admin dashboard.</li>
+            </ul>
+        </section>
+
+        <section class="mb-8 page-break">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">3. INVESTMENT & PRICING</h2>
+            
+            <table class="w-full text-left border-collapse mb-6 text-sm">
+                <thead>
+                    <tr class="bg-[#0A365C] text-white">
+                        <th class="p-3 border">Development Item</th>
+                        <th class="p-3 border w-32">Cost (₦)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3 border"><strong>Website Development</strong><br><span class="text-gray-500 text-xs">5+ pages, premium animations, SEO, contact forms</span></td>
+                        <td class="p-3 border font-semibold">500,000</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="p-3 border"><strong>Quote & Booking System</strong></td>
+                        <td class="p-3 border font-semibold">100,000</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3 border"><strong>AI Chatbot Assistant (Add-on)</strong><br><span class="text-gray-500 text-xs">AI integration + secure knowledge base retrieval</span></td>
+                        <td class="p-3 border font-semibold">350,000</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="p-3 border"><strong>Initial Deployment Setup</strong><br><span class="text-gray-500 text-xs">Domain, SSL, security, environment setup (one-time)</span></td>
+                        <td class="p-3 border font-semibold">50,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="font-bold text-[#E8832A] mb-2">Package Options (Total Cost)</h3>
+            <table class="w-full text-left border-collapse mb-6 text-sm">
+                <thead>
+                    <tr class="bg-[#0A365C] text-white">
+                        <th class="p-3 border">Package</th>
+                        <th class="p-3 border w-32">One-Time (₦)</th>
+                        <th class="p-3 border w-32">Monthly (₦)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3 border"><strong>BASIC</strong><br><span class="text-gray-500 text-xs">Website + Booking System + Setup</span></td>
+                        <td class="p-3 border font-bold text-gray-800">650,000</td>
+                        <td class="p-3 border">15,000</td>
+                    </tr>
+                    <tr class="bg-orange-50">
+                        <td class="p-3 border"><strong>COMPLETE (Recommended)</strong><br><span class="text-gray-500 text-xs">Basic + Conergy AI Assistant Chatbot</span></td>
+                        <td class="p-3 border font-bold text-[#E8832A]">1,000,000</td>
+                        <td class="p-3 border">55,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="mb-12">
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">4. TIMELINE</h2>
+                    <ul class="text-sm space-y-2">
+                        <li><strong>Week 1:</strong> UI/UX design approvals.</li>
+                        <li><strong>Week 2-3:</strong> Core frontend & booking system.</li>
+                        <li><strong>Week 4:</strong> AI chatbot & knowledge base.</li>
+                        <li><strong>Week 5:</strong> Testing & Vercel deployment.</li>
+                        <li><strong>Week 6:</strong> Training & LAUNCH!</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">5. PAYMENT TERMS</h2>
+                    <ul class="text-sm space-y-2">
+                        <li>50% deposit to start (non-refundable).</li>
+                        <li>50% upon completion before launch.</li>
+                        <li>30 days free support post-launch.</li>
+                        <li>Monthly costs billed post-launch.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-12 pt-6 border-t border-gray-200">
+            <div class="flex justify-between items-end">
+                <div>
+                    <p class="font-bold text-[#0A365C]">Ajijolaoluwa Adesoji (Ajee)</p>
+                    <p class="text-sm text-gray-500">Software & AI Developer</p>
+                    <a href="https://ajijolaoluwa-adesoji.vercel.app" class="text-sm text-[#E8832A] hover:underline">ajijolaoluwa-adesoji.vercel.app</a>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500">+234 906 544 0091</p>
+                    <p class="text-sm text-gray-500">GitHub: github.com/AjeeAI</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

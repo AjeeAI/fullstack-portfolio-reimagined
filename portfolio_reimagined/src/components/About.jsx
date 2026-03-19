@@ -1,90 +1,156 @@
-import { 
-  FaReact, 
-  FaJs, 
-  FaHtml5, 
-  FaCss3, 
-  FaPython, 
-  FaDatabase, 
-  FaFire, 
-  FaPhp, 
-  FaGit 
-} from 'react-icons/fa';
-import { SiFlutter, SiDart, SiFastapi } from 'react-icons/si';
-import React from 'react';
+'use client';
 
-// 1. Next.js Link import
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer, float, glassReveal } from '@/utils/variants';
+
+// ICONS
+import { FaReact, FaJs, FaPython, FaDatabase, FaFire, FaGit } from 'react-icons/fa';
+import { SiFlutter, SiDart, SiFastapi, SiNextdotjs, SiVercel, SiLangchain } from 'react-icons/si';
+
+// --- THE ICON MAPPER ---
+const getSkillIcon = (name) => {
+  const iconMap = {
+    "Next.js": <SiNextdotjs className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "React": <FaReact className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "LangChain": <SiLangchain className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Python": <FaPython className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "FastAPI": <SiFastapi className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Flutter": <SiFlutter className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Dart": <SiDart className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Javascript": <FaJs className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Firebase": <FaFire className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "MySQL": <FaDatabase className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Vercel": <SiVercel className="w-8 h-8 sm:w-10 sm:h-10" />,
+    "Git": <FaGit className="w-8 h-8 sm:w-10 sm:h-10" />
+  };
+  return iconMap[name] || <FaFire className="w-8 h-8 sm:w-10 sm:h-10" />;
+};
+
+// --- THE FORMATTING PARSER ---
+const formatText = (text) => {
+  if (!text) return "";
+  const highlights = [
+    { word: "Ajijolaoluwa Adesoji", classes: "text-white font-semibold" },
+    { word: "Next.js", classes: "text-purple-400 font-medium" },
+    { word: "Flutter", classes: "text-purple-400 font-medium" },
+    { word: "FastAPI", classes: "text-purple-400 font-medium" }
+  ];
+
+  let formatted = [text];
+
+  highlights.forEach(({ word, classes }) => {
+    formatted = formatted.flatMap((part) => {
+      if (typeof part !== 'string') return part;
+      const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return part.split(regex).map((subPart, i) => 
+        subPart.toLowerCase() === word.toLowerCase() 
+          ? <span key={i} className={classes}>{subPart}</span> 
+          : subPart
+      );
+    });
+  });
+
+  return formatted;
+};
 
 const About = () => {
-    const skills = [
-  { name: "Flutter", icon: <SiFlutter className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "Dart", icon: <SiDart className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "React", icon: <FaReact className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "Javascript", icon: <FaJs className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "HTML", icon: <FaHtml5 className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "CSS", icon: <FaCss3 className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "FastAPI", icon: <SiFastapi className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "Python", icon: <FaPython className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "MySQL", icon: <FaDatabase className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "Firebase", icon: <FaFire className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "PHP", icon: <FaPhp className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> },
-  { name: "Git", icon: <FaGit className="w-8 h-8 sm:w-10 sm:h-10" color='white'/> } 
-];
+  const [aboutData, setAboutData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const docRef = doc(db, "metadata", "about");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setAboutData(docSnap.data());
+        }
+      } catch (error) {
+        console.error("Error fetching about section:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAbout();
+  }, []);
+
+  if (loading) return (
+    <div className="h-96 flex items-center justify-center text-purple-500/10 font-outfit italic tracking-widest animate-pulse">
+      SYNCING...
+    </div>
+  );
+  
+  if (!aboutData) return null;
 
   return (
-    <div className='w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col font-outfit'>
-        {/* About Section */}
-        <div className='flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12 xl:gap-20 mt-8 sm:mt-10 w-full'>
-            {/* Profile Image */}
-            <div className='flex justify-center items-center lg:justify-start'>
-                {/* 2. Direct path to the public/assets folder */}
+    <motion.div 
+      variants={staggerContainer(0.2, 0.1)}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.25 }}
+      className='w-full px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col font-outfit relative z-10 py-20'
+    >
+        <div className='flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12 xl:gap-20 w-full'>
+            <motion.div variants={fadeIn("right", 0.2)} className='relative group'>
+                <motion.div variants={float} animate="animate" className='absolute -inset-4 bg-purple-600/20 rounded-full blur-[50px] -z-10' />
+                <div className='absolute -inset-1 bg-gradient-to-r from-purple-600 to-violet-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000'></div>
                 <img 
-                    src="https://res.cloudinary.com/dzt3imk5w/image/upload/v1773067601/avatar2_s1brjn.jpg"
-                    alt='Profile Image'
-                    className='rounded-full w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80 object-cover'
+                  src={aboutData.profileImage}
+                  alt={aboutData.name}
+                  className='relative rounded-full w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80 object-cover border-4 border-white/10 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]'
                 />
-            </div>
+            </motion.div>
 
-            {/* About Text */}
             <div className='w-full lg:w-[70%] flex flex-col justify-start items-center lg:items-start text-center lg:text-left'>
-                <h1 className='text-white text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6'>
+                <motion.span variants={fadeIn("up", 0.3)} className='text-purple-500 font-bold text-xs uppercase tracking-[0.3em] mb-3 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]'>
+                    Get to know me
+                </motion.span>
+                <motion.h1 variants={fadeIn("up", 0.4)} className='text-white text-4xl lg:text-6xl font-bold mb-6 italic tracking-tight'>
                     About me
-                </h1>
-                <p className='text-white text-sm sm:text-base lg:text-lg leading-relaxed'>
-                    Hi! I am Ajijolaoluwa Adesoji, a fullstack developer passionate about building efficient, scalable applications. With deep experience in mobile development with Flutter, dynamic frontends with React, and robust backend systems with FastAPI, I thrive on creating seamless user experiences from concept to deployment.
-                </p>
+                </motion.h1>
+                
+                <motion.p variants={fadeIn("up", 0.5)} className='text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl font-light'>
+                   {formatText(aboutData.bio1)}
+                </motion.p>
+                <motion.p variants={fadeIn("up", 0.6)} className='text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed mt-4 max-w-2xl font-light'>
+                   {formatText(aboutData.bio2)}
+                </motion.p>
 
-                {/* 3. Replaced 'to' with 'href' for Next.js Link */}
-                <Link href="/#contact">
-                    <button className='w-32 sm:w-36 h-10 sm:h-12 text-white bg-green-500 rounded-xl font-bold mt-6 sm:mt-8 lg:mt-10 hover:bg-green-600 transition-colors text-sm sm:text-base'>
-                        Contact Me
-                    </button>
-                </Link>
+                <motion.div variants={fadeIn("up", 0.7)}>
+                  <Link href="/#contact">
+                      <motion.button 
+                        whileHover={{ scale: 1.05, boxShadow: "0px 0px 20px rgba(168, 85, 247, 0.5)" }}
+                        whileTap={{ scale: 0.95 }}
+                        className='px-10 py-4 text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl font-bold mt-10 shadow-lg shadow-purple-600/20 border border-white/10 tracking-widest uppercase text-xs'
+                      >
+                          Let's Talk
+                      </motion.button>
+                  </Link>
+                </motion.div>
             </div>
         </div>
         
-        {/* Skills Section */}
-        <div className='flex flex-col justify-center items-center mt-12 sm:mt-16 lg:mt-20'>
-            <h2 className='text-white font-bold text-xl sm:text-2xl lg:text-3xl mb-6 sm:mb-8 font-outfit'>
-                My Tech Stack
-            </h2>
+        <div className='flex flex-col justify-center items-center mt-32'>
+            <motion.div variants={fadeIn("up", 0.2)} className='flex flex-col items-center mb-16'>
+                <h2 className='text-white font-bold text-3xl lg:text-5xl mb-3 font-outfit italic'>My Tech Stack</h2>
+                <div className='h-1 w-24 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full shadow-[0_0_15px_rgba(168,85,247,0.6)]'></div>
+            </motion.div>
 
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 w-full max-w-4xl'>
-                {skills.map((skill) => (
-                    <div 
-                        key={skill.name} 
-                        className='flex flex-col w-full aspect-square justify-center items-center gap-2 sm:gap-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition-all duration-300 hover:scale-105 p-2 sm:p-4'
-                    >
-                        <div className='text-white'>
-                            {skill.icon}
-                        </div>
-                        <p className='text-white font-medium text-xs sm:text-sm text-center'>{skill.name}</p>
-                    </div>
+            <motion.div variants={staggerContainer(0.05, 0.2)} className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full max-w-5xl'>
+                {aboutData.skills?.map((skillName) => (
+                    <motion.div key={skillName} variants={glassReveal} whileHover={{ scale: 1.05, borderColor: "rgba(168, 85, 247, 0.4)", backgroundColor: "rgba(255, 255, 255, 0.08)" }} className='flex flex-col w-full aspect-square justify-center items-center gap-4 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl transition-all duration-300 group shadow-2xl cursor-default'>
+                        <div className='text-slate-400 group-hover:text-purple-400 transition-colors duration-500 group-hover:drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]'>{getSkillIcon(skillName)}</div>
+                        <p className='text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] group-hover:text-white transition-colors'>{skillName}</p>
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
         </div>
-    </div>
+    </motion.div>
   )
 }
 
-export default About
+export default About;

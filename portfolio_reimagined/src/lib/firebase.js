@@ -1,10 +1,10 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp, getApps } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// ADD THIS LINE:
+// src/lib/firebase.js
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+// 1. IMPORT AUTHENTICATION
+import { getAuth } from "firebase/auth"; 
+import { getAnalytics } from "firebase/analytics";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyD_U9derA18BplaDOdzWGyL62WPXRSIcq4",
   authDomain: "portfolio-8ce12.firebaseapp.com",
@@ -16,10 +16,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase safely for Next.js
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Export the database
+// 2. EXPORT DATABASE AND AUTH
 export const db = getFirestore(app);
+export const auth = getAuth(app);
 
-// (Optional) Initialize analytics only if needed on the client side
-// export const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;
+// (Optional) Initialize analytics only on the client side
+export const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;

@@ -25,7 +25,7 @@ dist-ssr
 
 
 # Dependencies
-/node_modules
+# /node_modules
 /.pnp
 .pnp.js
 
@@ -58,3 +58,4 @@ yarn-error.log*
 # OS metadata
 .DS_Store
 Thumbs.db
+.vercel

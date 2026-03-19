@@ -40,3 +40,7 @@ html {
 .bg-gradient-custom-diagonal {
   background: linear-gradient(45deg, var(--color-custombg) 0%, var(--color-custompurple) 50%, var(--color-customdark) 100%);
 }
+
+/* * {
+  border: 1px solid red !important;
+} */
