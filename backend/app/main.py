@@ -18,6 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- RATE LIMITING SETUP ---
+# In-memory dictionary to track messages per session
+session_message_counts = {}
+MAX_MESSAGES_PER_SESSION = 4
+
 @app.get("/")
 def home():
     return {"status": "Agentic AI & Email Backend is operational 🚀"}
@@ -25,6 +30,18 @@ def home():
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
     """Handles AI queries using LangGraph ReAct Agent with Streaming."""
+    
+    # 1. Check Rate Limit
+    current_count = session_message_counts.get(request.thread_id, 0)
+    
+    if current_count >= MAX_MESSAGES_PER_SESSION:
+        # Gracefully stream a rejection message instead of throwing an HTTP error
+        async def limit_reached_response():
+            yield "You've reached the maximum number of messages for this session. Please use the contact form below to get in touch with Ajee directly!"
+        return StreamingResponse(limit_reached_response(), media_type="text/plain")
+    
+    # 2. Increment the count for this thread_id
+    session_message_counts[request.thread_id] = current_count + 1
     
     async def generate_response():
         try:
@@ -46,6 +63,9 @@ async def chat_endpoint(request: ChatRequest):
                         
         except Exception as e:
             print(f"Chat Error: {e}")
+            # Rollback the user's message count if the AI crashes so they don't lose a turn
+            if session_message_counts[request.thread_id] > 0:
+                session_message_counts[request.thread_id] -= 1
             yield "Sorry, I encountered an error while generating the response."
 
     return StreamingResponse(generate_response(), media_type="text/plain")

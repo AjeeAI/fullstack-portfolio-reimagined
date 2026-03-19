@@ -2,8 +2,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
-// NEW: Import ReactMarkdown
 import ReactMarkdown from "react-markdown";
+
+// NEW: Store the URL in a variable at the top of the file
+// It checks your environment variables first, then falls back to localhost!
+const api_url = process.env.NEXT_PUBLIC_API_URL;
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +43,8 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/chat", {
+      // NEW: Use the api_url variable here!
+      const response = await fetch(`${api_url}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -108,7 +112,7 @@ const Chatbot = () => {
                       : "bg-white/5 border border-white/10 text-gray-200 rounded-2xl rounded-bl-sm"
                   }`}
                 >
-                  {/* NEW: Render Markdown for AI, raw text for the user */}
+                  {/* Render Markdown for AI, raw text for the user */}
                   {msg.role === "user" ? (
                     msg.content
                   ) : (
