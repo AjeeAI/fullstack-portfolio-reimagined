@@ -10,9 +10,15 @@ from agent import agent_graph
 
 app = FastAPI(title="Ajee's Portfolio API (Agentic RAG)", version="3.0.0")
 
+# --- CORS SETUP ---
+# Restrict access to only your production frontend
+ALLOWED_ORIGINS = [
+    "https://ajijolaoluwa-adesoji.vercel.app"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=ALLOWED_ORIGINS, 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,7 +70,7 @@ async def chat_endpoint(request: ChatRequest):
         except Exception as e:
             print(f"Chat Error: {e}")
             # Rollback the user's message count if the AI crashes so they don't lose a turn
-            if session_message_counts[request.thread_id] > 0:
+            if session_message_counts.get(request.thread_id, 0) > 0:
                 session_message_counts[request.thread_id] -= 1
             yield "Sorry, I encountered an error while generating the response."
 
