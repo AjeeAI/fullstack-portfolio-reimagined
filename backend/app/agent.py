@@ -1,5 +1,4 @@
 from supabase import create_client, Client
-from langchain_community.vectorstores import SupabaseVectorStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.tools import tool
 from langchain_core.messages import SystemMessage
@@ -11,20 +10,11 @@ from config import SUPABASE_URL, SUPABASE_SERVICE_KEY, OPENAI_API_KEY
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-# Initialize Embeddings & Vector Store
+# Initialize Embeddings
 embeddings = OpenAIEmbeddings(
     model="text-embedding-3-small", 
     openai_api_key=OPENAI_API_KEY
 )
-
-vector_store = SupabaseVectorStore(
-    embedding=embeddings,
-    client=supabase,
-    table_name="portfolio_documents",
-    query_name="match_portfolio_documents"
-)
-
-retriever = vector_store.as_retriever(search_kwargs={"k": 4})
 
 # Define the retrieval tool using the @tool decorator
 @tool
@@ -37,11 +27,27 @@ def retrieve_portfolio_info(query: str) -> str:
     small talk, or greetings.
     """
     try:
-        results = retriever.invoke(query)
+        # 1. Convert the user's text query into a vector embedding manually
+        query_embedding = embeddings.embed_query(query)
+        
+        # 2. Call the Supabase database directly (Bypassing the broken LangChain wrapper!)
+        response = supabase.rpc(
+            "match_portfolio_documents", 
+            {
+                "query_embedding": query_embedding,
+                "match_count": 4,
+                "filter": {}
+            }
+        ).execute()
+        
+        # 3. Format the results
+        results = response.data
         if not results:
             return "No relevant portfolio documents found."
         
-        return "\n\n---\n\n".join(doc.page_content for doc in results)
+        # The RPC returns a list of dictionaries. 
+        # (We check for both 'content' and 'page_content' depending on how your DB table is named)
+        return "\n\n---\n\n".join(doc.get("content", doc.get("page_content", "")) for doc in results)
         
     except Exception as e:
         # If Supabase or the network crashes, catch it here!
