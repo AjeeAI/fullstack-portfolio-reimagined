@@ -36,11 +36,18 @@ def retrieve_portfolio_info(query: str) -> str:
     projects, or background. Do NOT use this for general knowledge questions, 
     small talk, or greetings.
     """
-    results = retriever.invoke(query)
-    if not results:
-        return "No relevant portfolio documents found."
-    
-    return "\n\n---\n\n".join(doc.page_content for doc in results)
+    try:
+        results = retriever.invoke(query)
+        if not results:
+            return "No relevant portfolio documents found."
+        
+        return "\n\n---\n\n".join(doc.page_content for doc in results)
+        
+    except Exception as e:
+        # If Supabase or the network crashes, catch it here!
+        print(f"Tool execution error: {e}")
+        # Returning a string ensures LangGraph successfully creates a ToolMessage
+        return "I experienced a technical issue accessing the database. Please tell the user to try again later or use the contact form."
 
 # Bind the tool to a list
 tools = [retrieve_portfolio_info]

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+import time
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import HumanMessage
@@ -24,30 +25,46 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- RATE LIMITING SETUP ---
-# In-memory dictionary to track messages per session
-session_message_counts = {}
-MAX_MESSAGES_PER_SESSION = 4
+# --- ROBUST RATE LIMITING SETUP ---
+# Store format: { "ip_address": [timestamp1, timestamp2, ...] }
+ip_request_records = {}
+TIME_WINDOW_SECONDS = 600  # 10 minutes
+MAX_MESSAGES_PER_WINDOW = 10  # 10 messages allowed per 10 mins
+
+def get_client_ip(request: Request) -> str:
+    """Extracts the real IP address, even when hosted behind proxies like Render."""
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host
 
 @app.get("/")
 def home():
     return {"status": "Agentic AI & Email Backend is operational 🚀"}
 
 @app.post("/api/chat")
-async def chat_endpoint(request: ChatRequest):
+async def chat_endpoint(request: ChatRequest, fastapi_req: Request):
     """Handles AI queries using LangGraph ReAct Agent with Streaming."""
     
-    # 1. Check Rate Limit
-    current_count = session_message_counts.get(request.thread_id, 0)
+    # 1. Check Rate Limit based on IP and Time
+    client_ip = get_client_ip(fastapi_req)
+    current_time = time.time()
     
-    if current_count >= MAX_MESSAGES_PER_SESSION:
+    # Get the user's request history, or start a new empty list
+    user_requests = ip_request_records.get(client_ip, [])
+    
+    # Clean up old requests (remove timestamps older than 10 minutes ago)
+    user_requests = [req_time for req_time in user_requests if current_time - req_time < TIME_WINDOW_SECONDS]
+    
+    if len(user_requests) >= MAX_MESSAGES_PER_WINDOW:
         # Gracefully stream a rejection message instead of throwing an HTTP error
         async def limit_reached_response():
-            yield "You've reached the maximum number of messages for this session. Please use the contact form below to get in touch with Ajee directly!"
+            yield "To ensure everyone gets a turn, I have a limit of 10 messages every 10 minutes. Please wait a bit, or use the contact form below to get in touch with Ajee directly!"
         return StreamingResponse(limit_reached_response(), media_type="text/plain")
     
-    # 2. Increment the count for this thread_id
-    session_message_counts[request.thread_id] = current_count + 1
+    # 2. Increment the count for this IP address
+    user_requests.append(current_time)
+    ip_request_records[client_ip] = user_requests
     
     async def generate_response():
         try:
@@ -69,9 +86,9 @@ async def chat_endpoint(request: ChatRequest):
                         
         except Exception as e:
             print(f"Chat Error: {e}")
-            # Rollback the user's message count if the AI crashes so they don't lose a turn
-            if session_message_counts.get(request.thread_id, 0) > 0:
-                session_message_counts[request.thread_id] -= 1
+            # Rollback the user's message timestamp if the AI crashes so they don't lose a turn
+            if ip_request_records.get(client_ip):
+                ip_request_records[client_ip].pop()
             yield "Sorry, I encountered an error while generating the response."
 
     return StreamingResponse(generate_response(), media_type="text/plain")

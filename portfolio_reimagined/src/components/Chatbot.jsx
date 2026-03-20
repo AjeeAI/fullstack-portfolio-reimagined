@@ -4,9 +4,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-// NEW: Store the URL in a variable at the top of the file
-// It checks your environment variables first, then falls back to localhost!
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+// Use environment variable for the API URL, fallback to localhost for local testing
+const api_url = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +16,20 @@ const Chatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Generate or retrieve a unique thread ID that survives page refreshes
   const [threadId] = useState(() => {
-    return typeof crypto !== 'undefined' && crypto.randomUUID 
-      ? crypto.randomUUID() 
-      : 'session_' + Math.random().toString(36).substr(2, 9);
+    if (typeof window !== "undefined") {
+      const existingId = sessionStorage.getItem("ajee_chat_session");
+      if (existingId) return existingId;
+
+      const newId = typeof crypto !== 'undefined' && crypto.randomUUID 
+        ? crypto.randomUUID() 
+        : 'session_' + Math.random().toString(36).substr(2, 9);
+      
+      sessionStorage.setItem("ajee_chat_session", newId);
+      return newId;
+    }
+    return "default_ssr_session";
   });
 
   const scrollToBottom = () => {
@@ -40,10 +49,10 @@ const Chatbot = () => {
     setInput("");
     setIsTyping(true);
 
+    // Add an empty assistant message placeholder to hold the typing dots / incoming stream
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      // NEW: Use the api_url variable here!
       const response = await fetch(`${api_url}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,6 +61,8 @@ const Chatbot = () => {
           thread_id: threadId 
         }),
       });
+
+      // (Removed the manual 429 check here since the backend now streams the limit warning gracefully!)
 
       if (!response.ok) throw new Error("Network response was not ok");
 
@@ -112,9 +123,15 @@ const Chatbot = () => {
                       : "bg-white/5 border border-white/10 text-gray-200 rounded-2xl rounded-bl-sm"
                   }`}
                 >
-                  {/* Render Markdown for AI, raw text for the user */}
+                  {/* Render raw text for user, typing indicator for empty AI bubble, or Markdown for finished/streaming AI text */}
                   {msg.role === "user" ? (
                     msg.content
+                  ) : msg.content === "" && isTyping ? (
+                    <div className="flex gap-1.5 items-center h-5 px-2">
+                      <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce"></span>
+                      <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce delay-75"></span>
+                      <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce delay-150"></span>
+                    </div>
                   ) : (
                     <ReactMarkdown
                       components={{
@@ -132,15 +149,6 @@ const Chatbot = () => {
                 </div>
               </div>
             ))}
-            {isTyping && messages[messages.length - 1].role === "user" && (
-               <div className="flex justify-start">
-                  <div className="bg-white/5 border border-white/10 p-4 rounded-2xl rounded-bl-sm flex gap-1.5 items-center h-10">
-                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce"></span>
-                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce delay-75"></span>
-                    <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce delay-150"></span>
-                  </div>
-               </div>
-            )}
             <div ref={messagesEndRef} />
           </div>
 
