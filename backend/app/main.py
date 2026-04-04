@@ -42,6 +42,13 @@ def get_client_ip(request: Request) -> str:
 def home():
     return {"status": "Agentic AI & Email Backend is operational 🚀"}
 
+
+@app.get("/health")
+def get_health():
+    """Simple API to check the health of backend"""
+    return {
+        "status": "Healthy"
+    }
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest, fastapi_req: Request):
     """Handles AI queries using LangGraph ReAct Agent with Streaming."""

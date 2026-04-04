@@ -79,11 +79,12 @@ export default function NavigationHelper() {
   // If button shouldn't show, return nothing (null)
   if (!showButton) return null;
 
-  return (
+ return (
     <button
       onClick={scrollToTop}
       aria-label="Scroll to top"
-      className={`fixed bottom-8 right-8 z-[99] p-4 rounded-full 
+      // CHANGED: Moved from right-8 to left-6, and lowered z-index to 40 so it doesn't block the chatbot window on mobile
+      className={`fixed bottom-6 left-6 z-[40] p-4 rounded-full 
         /* Glassmorphism Classes */
         bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] 
         text-purple-400 hover:bg-white/20 hover:text-white hover:scale-110 
