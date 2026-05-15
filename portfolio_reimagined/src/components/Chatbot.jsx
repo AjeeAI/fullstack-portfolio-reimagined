@@ -40,6 +40,28 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
+
+  // NEW: Keep-Awake Ping Logic for Render
+  useEffect(() => {
+    const keepAwake = async () => {
+      try {
+        // We use your existing api_url variable here!
+        await fetch(`${api_url}/health`); 
+        console.log("Pinged backend to keep it awake 🚀");
+      } catch (error) {
+        console.error("Failed to ping backend:", error);
+      }
+    };
+
+    // Call it immediately when the Chatbot component loads
+    keepAwake();
+
+    // Set up the interval to call it every 8 minutes (480,000 ms)
+    const interval = setInterval(keepAwake, 480000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;

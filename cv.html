@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajijolaoluwa Adesoji David - CV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #05050a; 
+            --sidebar-dark: #0a0a15;
+            --accent-purple: #7c3aed; 
+            --gradient-start: #a855f7; 
+            --gradient-end: #3b82f6; 
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --white: #ffffff;
+            --border-color: #1e1e2e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #111111; 
+            color: var(--text-main); 
+            line-height: 1.5;
+        }
+
+        /* Standard Page Container */
+        .page-container {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto 10mm auto;
+            background: var(--bg-dark);
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        /* Full Width Container (For Page 3) */
+        .page-container.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar { 
+            background-color: var(--sidebar-dark); 
+            color: white; 
+            padding: 40px; 
+            border-right: 1px solid var(--border-color);
+            height: 100%;
+        }
+
+        .main-content { 
+            padding: 40px 60px; 
+            background-color: var(--bg-dark); 
+            height: 100%;
+        }
+
+        /* Vertical Margins for alignment */
+        .page-1 .sidebar, .page-1 .main-content { padding-top: 10mm; }
+        .page-multi .sidebar, .page-multi .main-content { padding-top: 12.5mm; }
+        .full-width .main-content { padding: 12.5mm 60px 25mm 60px; }
+
+        /* Split-Grid for optimizing space on Page 3 */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .profile-section h1 { 
+            font-size: 26px; font-weight: 800; line-height: 1.1; margin-bottom: 12px; 
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; 
+        }
+        .profile-section .role-tag { 
+            font-size: 12px; font-weight: 400; color: var(--white); text-transform: uppercase; 
+            letter-spacing: 1.5px; margin-bottom: 30px; display: block; border-bottom: 1px solid var(--border-color); padding-bottom: 25px; 
+        }
+
+        .sidebar-section { margin-top: 35px; }
+        .sidebar-title { 
+            font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--accent-purple); 
+            margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; 
+        }
+        .contact-item { font-size: 11px; margin-bottom: 14px; display: block; color: var(--text-dim); text-decoration: none; word-break: break-all; }
+
+        .skill-group { margin-bottom: 25px; }
+        .skill-group h4 { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
+        .skill-tag { 
+            display: inline-block; background: #1e1e2e; padding: 6px 12px; border-radius: 4px; font-size: 10px; 
+            margin: 0 6px 10px 0; border: 1px solid #334155; color: var(--text-main); 
+        }
+
+        .summary { 
+            font-size: 14px; color: var(--text-main); margin-bottom: 40px; padding: 25px; 
+            border-radius: 12px; background: rgba(124, 58, 237, 0.05); border-left: 5px solid var(--accent-purple); 
+        }
+
+        .section-title { 
+            font-size: 16px; font-weight: 700; color: var(--white); margin: 35px 0 20px 0; 
+            display: flex; align-items: center; text-transform: uppercase; letter-spacing: 2.5px; 
+        }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border-color); margin-left: 20px; }
+        
+        .split-grid .section-title { margin-top: 0; } /* Aligns headers inside the grid perfectly */
+
+        .entry { margin-bottom: 35px; }
+        .entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+        .entry-title { font-weight: 700; font-size: 16px; color: var(--white); }
+        .entry-meta { font-size: 13px; color: var(--gradient-end); font-weight: 600; margin-bottom: 5px; }
+        .entry-date { font-size: 12px; color: var(--text-dim); font-weight: 500; }
+        .bullet-list { padding-left: 20px; margin-top: 10px; }
+        .bullet-list li { font-size: 13px; margin-bottom: 6px; color: var(--text-main); }
+        .tech-pill { 
+            font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-top: 15px; text-transform: uppercase; 
+            display: block; border: 1px solid rgba(124, 58, 237, 0.3); padding: 5px 10px; border-radius: 4px; width: fit-content; 
+        }
+
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { padding: 0; background: var(--bg-dark); }
+            .page-container { margin: 0; border: none; box-shadow: none; }
+            .sidebar, .main-content { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container page-1">
+    <aside class="sidebar">
+        <div class="profile-section">
+            <h1>AJIJOLAOLUWA<br>ADESOJI DAVID</h1> 
+            <span class="role-tag">Full Stack & AI Engineer<br>AI Solutions Builder</span>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Contact</h3>
+            <span class="contact-item">Ogun State, Nigeria</span> 
+            <span class="contact-item">09065440091</span>
+            <a href="mailto:ajeeflutterdev@gmail.com" class="contact-item" target="_blank">ajeeflutterdev@gmail.com</a>
+            <a href="https://ajijolaoluwa-adesoji.vercel.app/" class="contact-item" target="_blank">ajijolaoluwa-adesoji.vercel.app</a>
+            <a href="https://github.com/AjeeAI" class="contact-item" target="_blank">github.com/AjeeAI</a>
+            <a href="https://linkedin.com/in/ajeeflutterdev" class="contact-item" target="_blank">linkedin.com/ajeeflutterdev</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Technical Expertise</h3>
+            <div class="skill-group">
+                <h4>AI & Machine Learning</h4>
+                <span class="skill-tag">LangGraph (ReAct)</span>
+                <span class="skill-tag">RAG Pipelines</span>
+                <span class="skill-tag">Gemini & GPT-4o</span>
+                <span class="skill-tag">Sentence Transformers</span>
+            </div>
+            <div class="skill-group">
+                <h4>Frontend & Mobile</h4>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">React 19 & Vite</span>
+                <span class="skill-tag">Flutter & Dart</span>
+                <span class="skill-tag">Tailwind CSS 4</span>
+            </div>
+            <div class="skill-group">
+                <h4>Backend & Cloud</h4>
+                <span class="skill-tag">FastAPI</span>
+                <span class="skill-tag">Neo4j & Qdrant</span>
+                <span class="skill-tag">Firebase & Supabase</span>
+                <span class="skill-tag">Docker</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section class="summary">
+            Forward-thinking Developer combining strong mobile engineering roots with advanced AI integration skills. Experienced in building Agentic workflows, secure payment systems, and infrastructure monitors that solve complex cultural and educational problems.
+        </section>
+
+        <h2 class="section-title">Work Experience</h2>
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">AI Fellow (AI Developer Track)</span>
+                <span class="entry-date">2025 – Present</span>
+            </div>
+            <div class="entry-meta">Nigerian Communications Commission (NCC) | Abeokuta, Nigeria</div>
+            <ul class="bullet-list">
+                <li>Selected for the specialized AI Developer track, focusing on engineering end-to-end AI solutions.</li>
+                <li>Undergoing intensive training in building agentic workflows using React, FastAPI, and LangGraph.</li>
+                <li>Implementing Vector Databases and Graph DBs to architect advanced Retrieval-Augmented Generation (RAG) systems.</li>
+            </ul>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">Data Annotator</span>
+                <span class="entry-date">Nov 2025 – Jan 2026</span>
+            </div>
+            <div class="entry-meta">Awarri | Lagos, Nigeria (Remote)</div>
+            <ul class="bullet-list">
+                <li>Collaborate with the Awarri team to annotate, label, and validate high-quality datasets for training African-centric AI models.</li>
+                <li>Ensure data accuracy and consistency to improve the cultural relevance of Large Language Models (LLMs).</li>
+            </ul>
+        </div>
+    </main>
+</div>
+
+<div class="page-container page-multi">
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Certifications</h3>
+            <div style="font-size: 11px; line-height: 1.7; color: var(--text-dim);">
+                <strong style="color: var(--white);">Google Cybersecurity Professional</strong><br>Coursera (2025)<br><br>
+                <strong style="color: var(--white);">Deploying AI into Production</strong><br>DataCamp (2025)<br><br>
+                <strong style="color: var(--white);">Introduction to FastAPI</strong><br>DataCamp (2025)
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">Freelance AI Trainer & Developer</span>
+                <span class="entry-date">Dec 2025 – Jan 2026</span>
+            </div>
+            <div class="entry-meta">Multimango / Outlier | Remote</div>
+            <ul class="bullet-list">
+                <li>Train and refine AI models on complex web development tasks to improve code reasoning and accuracy.</li>
+                <li>Conduct Named Entity Recognition (NER) and precise labeling using CVAT to improve datasets.</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">Agentic AI & Intelligent Solutions</h2>
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">CNII Sentinel Eye</span>
+                <span class="entry-date">2026</span>
+            </div>
+            <div class="entry-meta">Critical Network Infrastructure Intelligence Monitor</div>
+            <ul class="bullet-list">
+                <li>Architected a LangGraph ReAct agent powered by GPT-4o-mini for autonomous threat assessment.</li>
+                <li>Developed a Flutter mobile dashboard with interactive geospatial mapping and Telegram alerts.</li>
+            </ul>
+            <span class="tech-pill">FastAPI, LangGraph, Flutter, SQLAlchemy, OpenAI</span>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">EduIntellect</span>
+                <span class="entry-date">Hackathon Entry</span>
+            </div>
+            <div class="entry-meta">AI-Powered Bursary & Payment System</div>
+            <ul class="bullet-list">
+                <li>Developed a Gemini-powered RAG pipeline for conversational school policy queries.</li>
+                <li>Built backend verification for Interswitch Quickteller Business API to settle tuition payments.</li>
+            </ul>
+            <span class="tech-pill">React, FastAPI, Google Gemini API, Interswitch WebPay</span>
+        </div>
+    </main>
+</div>
+
+<div class="page-container page-multi full-width">
+    <main class="main-content">
+        
+        <div class="split-grid">
+            
+            <div class="grid-column">
+                <h2 class="section-title">Agentic AI (Cont.)</h2>
+                
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">AwaSabi (N-Atlas Hackathon)</span>
+                    </div>
+                    <div class="entry-meta">Indigenous Language Platform | Top 10 Finalist</div>
+                    <ul class="bullet-list">
+                        <li>Integrated the N-Atlas model to power a dynamic curriculum engine for indigenous Nigerian languages.</li>
+                        <li>Implemented Speech-to-Text functionality and a "bridge" translation system.</li>
+                    </ul>
+                    <span class="tech-pill">React, Python (FastAPI), N-Atlas LLM</span>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">MasteryAI</span>
+                    </div>
+                    <div class="entry-meta">Personalized Tutor for Math & English</div>
+                    <ul class="bullet-list">
+                        <li>Utilized Neo4j knowledge graphs to create adaptive learning paths and study tracks.</li>
+                        <li>Built a RAG pipeline utilizing Qdrant to provide context-aware calculus explanations.</li>
+                    </ul>
+                    <span class="tech-pill">FastAPI, LangGraph, Qdrant, Neo4j</span>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">Nigerian Tax Assistant</span>
+                    </div>
+                    <div class="entry-meta">Financial Compliance Tool</div>
+                    <ul class="bullet-list">
+                        <li>Built a compliance tool to calculate tax liabilities based on current Nigerian tax laws.</li>
+                    </ul>
+                    <span class="tech-pill">React, FastAPI, Python, Tailwind CSS</span>
+                </div>
+            </div>
+
+            <div class="grid-column">
+                <h2 class="section-title">Full-Stack & Mobile</h2>
+                
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">Bookish</span>
+                    </div>
+                    <div class="entry-meta">Full-Stack Storytelling & CMS Platform</div>
+                    <ul class="bullet-list">
+                        <li>Engineered a modern CMS using React 19 and Tailwind CSS 4 with secure admin routes via Firebase Auth.</li>
+                        <li>Integrated Cloudinary for media management and real-time Firestore updates.</li>
+                    </ul>
+                    <span class="tech-pill">React 19, Vite, Tailwind 4, Firebase</span>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">YouTube Downloader</span>
+                    </div>
+                    <div class="entry-meta">Standalone Desktop Utility App</div>
+                    <ul class="bullet-list">
+                        <li>Designed a standalone Flutter application to bypass browser restrictions and manage content reliably.</li>
+                    </ul>
+                    <span class="tech-pill">Flutter Desktop</span>
+                </div>
+
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">E-commerce App + Admin</span>
+                    </div>
+                    <div class="entry-meta">Real-time Stock & Payments Management</div>
+                    <ul class="bullet-list">
+                        <li>Built a dual-interface mobile application managing real-time stock and secure payments via Stripe.</li>
+                    </ul>
+                    <span class="tech-pill">Flutter, Firebase, Stripe</span>
+                </div>
+            </div>
+            
+        </div> <h2 class="section-title">Education</h2>
+        <div class="entry">
+            <div class="entry-header">
+                <span class="entry-title">Bachelor of Science (B.Sc.) in Statistics</span>
+                <span class="entry-date">2019 – 2025</span>
+            </div>
+            <div class="entry-meta">Obafemi Awolowo University (OAU) | Ile-Ife, Nigeria</div>
+            <ul class="bullet-list">
+                <li><strong>Final Year Project:</strong> Designed a multi-step IoT authentication system using mathematical combinatorics (Mutually Orthogonal Latin Squares) to ensure high entropy and security.</li>
+            </ul>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
