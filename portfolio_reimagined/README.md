@@ -1,16 +1,38 @@
-# React + Vite
+Location: /portfolio_reimagined/README.md
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portfolio Frontend: Next.js & Framer Motion
+The frontend is a reactive, single-page experience designed for maximum engagement and performance. It serves as the primary interface for the Agentic AI assistant.
 
-Currently, two official plugins are available:
+🚀 Key Technical Features
+Agentic Chat Interface: Built to handle real-time token streaming from the FastAPI backend, providing an "LLM-native" user experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Dynamic Scroll Tracking: Implements custom useEffect logic to synchronize the browser's URL path with the current viewport section (Hero, About, Projects, etc.).
 
-## React Compiler
+Backend Keep-Awake: Includes an automated pinging service that hits the /health endpoint every 8 minutes to prevent backend hibernation on hosting services like Render.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Vector-Ready Assets: Uses SVG-based iconography (Lucide, React-Icons) for crisp visuals across all resolutions.
 
-## Expanding the ESLint configuration
+🛠️ Tech Stack
+Framework: Next.js 16+.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+State & Logic: React 19 with custom hooks for navigation and connectivity.
+
+Styling: Tailwind CSS 4.x using a custom-gradient utility.
+
+Animations: Framer Motion for scroll-triggered transitions and micro-interactions.
+
+Database/Auth: Firebase for lightweight data management.
+
+⚙️ Setup & Installation
+Install dependencies:
+
+npm install
+
+Environment Variables: Create a .env.local file:
+
+VITE_API_URL=https://your-backend-api.com
+# Include Firebase Configs
+
+Development:
+
+npm run dev
