@@ -40,21 +40,22 @@ const Techstack = () => {
       {/* SECTION HEADER: Staggered Fade In */}
       <motion.span 
         variants={fadeIn("up", 0.1)}
-        className='text-purple-500 font-bold text-xs uppercase tracking-[0.3em] mb-3 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]'
+        // DUAL STYLING: Corporate blue in Light Mode, Neon purple in Dark Mode
+        className='text-blue-600 dark:text-purple-500 font-bold text-xs uppercase tracking-[0.3em] mb-3 drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(168,85,247,0.4)] transition-colors duration-300'
       >
         Expertise
       </motion.span>
       
       <motion.h1 
         variants={fadeIn("up", 0.2)}
-        className='text-white font-bold text-4xl lg:text-5xl font-outfit mb-4 italic tracking-tight'
+        className='text-slate-900 dark:text-white font-bold text-4xl lg:text-5xl font-outfit mb-4 italic tracking-tight transition-colors duration-300'
       >
         Tech Stack
       </motion.h1>
       
       <motion.p 
         variants={fadeIn("up", 0.3)}
-        className='text-slate-400 text-center mb-16 px-4 max-w-2xl leading-relaxed font-light'
+        className='text-slate-600 dark:text-slate-400 text-center mb-16 px-4 max-w-2xl leading-relaxed font-light transition-colors duration-300'
       >
         Building intelligent, scalable systems with a focus on performance, clean architecture, and modern AI integration.
       </motion.p>
@@ -68,22 +69,21 @@ const Techstack = () => {
           <motion.div 
             key={skillCategory.category}
             variants={glassReveal}
-            // THE MAGNETIC GLOW EFFECT
-            whileHover={{ 
-              scale: 1.05, 
-              boxShadow: "0px 0px 30px rgba(168, 85, 247, 0.3)",
-              borderColor: "rgba(168, 85, 247, 0.5)",
-              backgroundColor: "rgba(255, 255, 255, 0.08)"
-            }}
+            // THE MAGNETIC GLOW EFFECT (Now handled via Tailwind classes to support dual themes)
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col w-full sm:w-80 bg-white/[0.05] backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl transition-all duration-300 group cursor-default"
+            className="flex flex-col w-full sm:w-80 rounded-3xl p-8 transition-all duration-300 group cursor-default
+              /* Light Mode */
+              bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-300
+              /* Dark Mode */
+              dark:bg-white/[0.05] dark:backdrop-blur-3xl dark:border-white/10 dark:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] dark:hover:border-[rgba(168,85,247,0.5)] dark:hover:bg-white/[0.08]"
           >
             <div className="flex flex-col mb-8">
               <div className="flex items-center mb-4">
                 <span className="text-3xl mr-4 group-hover:rotate-12 transition-transform duration-500">
                   {skillCategory.icon}
                 </span>
-                <p className='text-white font-bold text-2xl tracking-tight italic'>{skillCategory.category}</p>
+                <p className='text-slate-900 dark:text-white font-bold text-2xl tracking-tight italic transition-colors duration-300'>{skillCategory.category}</p>
               </div>
               
               {/* Animated Accent Line */}
@@ -91,7 +91,8 @@ const Techstack = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: "3rem" }}
                 transition={{ duration: 0.8, delay: 0.5 }}
-                className="h-1 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.6)]"
+                className="h-1 rounded-full bg-gradient-to-r shadow-sm dark:shadow-[0_0_12px_rgba(168,85,247,0.6)]
+                  from-blue-500 to-indigo-500 dark:from-purple-500 dark:to-indigo-500 transition-colors duration-300"
               />
             </div>
             
@@ -99,10 +100,17 @@ const Techstack = () => {
               {skillCategory.technologies.map((tech) => (
                 <motion.div 
                   key={tech}
-                  whileHover={{ scale: 1.05, color: "#D8B4FE" }}
-                  className="bg-purple-500/5 border border-purple-500/10 rounded-xl p-3 flex justify-center items-center transition-all duration-300 group/pill"
+                  whileHover={{ scale: 1.05 }}
+                  className="rounded-xl p-3 flex justify-center items-center transition-all duration-300 group/pill
+                    /* Light Mode */
+                    bg-slate-50 border border-slate-200 hover:border-blue-300
+                    /* Dark Mode */
+                    dark:bg-purple-500/5 dark:border-purple-500/10 dark:hover:border-purple-500/30"
                 >
-                  <p className='text-slate-400 font-bold text-[10px] uppercase tracking-wider group-hover/pill:text-white transition-colors text-center'>
+                  <p className='font-bold text-[10px] uppercase tracking-wider text-center transition-colors duration-300
+                    text-slate-500 group-hover/pill:text-blue-600
+                    dark:text-slate-400 dark:group-hover/pill:text-white'
+                  >
                     {tech}
                   </p>
                 </motion.div>
@@ -116,7 +124,8 @@ const Techstack = () => {
       <motion.div 
         variants={float}
         animate="animate"
-        className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-64 bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+        className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-64 blur-[150px] rounded-full pointer-events-none transition-colors duration-700
+          bg-blue-400/10 dark:bg-purple-600/10"
       />
     </motion.div>
   )

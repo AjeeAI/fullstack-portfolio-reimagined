@@ -21,7 +21,8 @@ export default function ProjectVideoBtn({ videoLink }) {
 
   if (!videoLink) {
     return (
-      <button disabled className="px-8 py-4 border border-white/5 text-gray-600 rounded-2xl font-bold cursor-not-allowed text-center uppercase text-xs tracking-widest">
+      // DUAL STYLING: Disabled state
+      <button disabled className="px-8 py-4 border rounded-2xl font-bold cursor-not-allowed text-center uppercase text-xs tracking-widest border-slate-200 dark:border-white/5 text-slate-400 dark:text-gray-600 transition-colors duration-300">
         No Preview
       </button>
     );
@@ -29,27 +30,34 @@ export default function ProjectVideoBtn({ videoLink }) {
 
   return (
     <>
-      {/* The Button: Styled as a Secondary Glass Action */}
+      {/* The Button: Solid Corporate in Light Mode, Cyber Glass in Dark Mode */}
       <button 
         onClick={() => setActiveVideo(videoLink)}
-        className="px-8 py-4 bg-white/5 backdrop-blur-md border border-purple-500/30 text-purple-400 rounded-2xl font-bold hover:bg-purple-500/10 hover:border-purple-500 hover:-translate-y-1 transition-all shadow-lg shadow-purple-900/10 text-center uppercase text-xs tracking-widest"
+        className="px-8 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest text-center transition-all hover:-translate-y-1
+          /* Light Mode */
+          bg-white border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-slate-50 shadow-sm
+          /* Dark Mode */
+          dark:bg-white/5 dark:backdrop-blur-md dark:border-purple-500/30 dark:text-purple-400 dark:hover:bg-purple-500/10 dark:hover:border-purple-500 dark:shadow-lg dark:shadow-purple-900/10"
       >
         Watch Video
       </button>
 
-      {/* The Modal: High-End Cyber Glass */}
+      {/* The Modal Overlay */}
       {activeVideo && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300" 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300 bg-slate-900/80 dark:bg-black/90 backdrop-blur-sm dark:backdrop-blur-md transition-colors" 
           onClick={() => setActiveVideo(null)}
         >
+          {/* Modal Container */}
           <div 
-            className="relative w-full max-w-4xl bg-[#030014]/90 backdrop-blur-3xl rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(168,85,247,0.15)] border border-white/10" 
+            className="relative w-full max-w-4xl rounded-3xl overflow-hidden backdrop-blur-3xl bg-white dark:bg-[#030014]/90 shadow-2xl dark:shadow-[0_0_50px_rgba(168,85,247,0.15)] border border-slate-200 dark:border-white/10 transition-colors duration-300" 
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button: Switched to Purple Theme */}
+            {/* Close Button: Dark gray hover in Light Mode, Purple in Dark Mode */}
             <button 
-              className="absolute top-4 right-4 z-10 w-10 h-10 flex justify-center items-center bg-white/5 hover:bg-purple-500 text-white rounded-full border border-white/10 transition-all duration-300 shadow-xl" 
+              className="absolute top-4 right-4 z-10 w-10 h-10 flex justify-center items-center rounded-full transition-all duration-300 shadow-md dark:shadow-xl
+                bg-black/10 hover:bg-black/20 text-slate-900 border border-slate-300
+                dark:bg-white/5 dark:hover:bg-purple-500 dark:text-white dark:border-white/10" 
               onClick={() => setActiveVideo(null)}
             >
               ✕
@@ -68,8 +76,8 @@ export default function ProjectVideoBtn({ videoLink }) {
             </div>
 
             {/* Bottom Modal Branding */}
-            <div className="bg-white/5 p-4 flex justify-center items-center">
-                <p className="text-[10px] uppercase tracking-[0.5em] text-purple-500 font-bold">
+            <div className="p-4 flex justify-center items-center bg-slate-50 dark:bg-white/5 border-t border-slate-200 dark:border-transparent transition-colors duration-300">
+                <p className="text-[10px] uppercase tracking-[0.5em] font-bold text-blue-600 dark:text-purple-500 transition-colors duration-300">
                     Interactive Project Preview
                 </p>
             </div>

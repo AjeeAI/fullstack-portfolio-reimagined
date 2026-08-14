@@ -1,13 +1,8 @@
-/* @import "tailwindcss";
-
-@theme{
-    --color-custombg: #0E0B17;
-    --color-custom2bg: #550497;
-}
- */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Pacifico&display=swap');
 @import "tailwindcss";
+
+/* 🚨 THE MAGIC FIX FOR NEXT-THEMES IN TAILWIND V4 🚨 */
+@custom-variant dark (&:is(.dark *));
  
 html {
   scroll-behavior: smooth;
@@ -40,11 +35,6 @@ html {
 .bg-gradient-custom-diagonal {
   background: linear-gradient(45deg, var(--color-custombg) 0%, var(--color-custompurple) 50%, var(--color-customdark) 100%);
 }
-
-/* * {
-  border: 1px solid red !important;
-} */
-
 
 /* --- CUSTOM SCROLLBAR FOR WEB AND CHATBOT --- */
 /* For Firefox */

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaArrowUp } from 'react-icons/fa'; // Assuming you have react-icons installed
+import { FaArrowUp } from 'react-icons/fa';
 
 export default function NavigationHelper() {
   const [showButton, setShowButton] = useState(false);
@@ -83,12 +83,12 @@ export default function NavigationHelper() {
     <button
       onClick={scrollToTop}
       aria-label="Scroll to top"
-      // CHANGED: Moved from right-8 to left-6, and lowered z-index to 40 so it doesn't block the chatbot window on mobile
-      className={`fixed bottom-6 left-6 z-[40] p-4 rounded-full 
-        /* Glassmorphism Classes */
-        bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] 
-        text-purple-400 hover:bg-white/20 hover:text-white hover:scale-110 
-        transition-all duration-300 ease-in-out
+      // DUAL STYLING: Crisp white button in light mode, purple glass in dark mode
+      className={`fixed bottom-6 left-6 z-[40] p-4 rounded-full backdrop-blur-md transition-all duration-300 ease-in-out hover:scale-110
+        /* Light Mode Classes */
+        bg-white border border-slate-200 shadow-md text-slate-500 hover:bg-slate-50 hover:text-blue-600
+        /* Dark Mode Overrides */
+        dark:bg-white/10 dark:border-white/20 dark:shadow-[0_4px_30px_rgba(0,0,0,0.1)] dark:text-purple-400 dark:hover:bg-white/20 dark:hover:text-white
         ${isFading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}
     >
       <FaArrowUp size={20} />
